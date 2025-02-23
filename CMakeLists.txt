@@ -13,24 +13,23 @@ macro(set_from_environment VARIABLE)
 	endif()
 endmacro()
 
-macro(find_commonlib_path)
-	if (CommonLibName AND NOT ${CommonLibName} STREQUAL "")
-		find_path(CommonLibPath
-		include/REL/Relocation.h
-		PATHS extern/${CommonLibName})
-	endif()
-endmacro()
 
 set_from_environment(VCPKG_ROOT) 
-set(CommonLibName "CommonLibSSE")
-find_commonlib_path()
+set(CommonLibName "CommonLibVR")
+set_from_environment(SkyrimVRPath)
+
+
+set_from_environment(${CommonLibName}Path)
+set(CommonLibPath ${${CommonLibName}Path})
+
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "")
 set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "")
 
-add_compile_definitions(SKYRIM_AE)
-add_compile_definitions(SKYRIM_SUPPORT_AE)
+add_compile_definitions(SKYRIMVR)
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+add_compile_definitions(SKSE_SUPPORT_XBYAK)
 if (BUILD_TEST)
 	add_compile_definitions(DEBUG)
 endif()
