@@ -68,7 +68,8 @@
         "release"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_SKYRIMVR": true
       }
     },
     {
@@ -81,7 +82,8 @@
         "outdated"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_SKYRIMVR": true
       }
     },
     {
@@ -94,7 +96,8 @@
         "test"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_SKYRIMVR": true
       }
     }
   ],

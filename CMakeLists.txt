@@ -10,31 +10,35 @@ project(
 	LANGUAGES CXX
 )
 
+add_compile_definitions(SKYRIMVR)
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+add_compile_definitions(SKSE_SUPPORT_XBYAK)
+if (BUILD_TEST)
+	add_compile_definitions(DEBUG)
+endif()
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# Get Skyrim VR path from registry for VR build
 get_filename_component(
-	Skyrim64Path
-	"[HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition;installed path]"
+	GAME_DIR
+	"[HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim VR;installed path]"
 	ABSOLUTE CACHE
 )
 
 list(APPEND CMAKE_IGNORE_PATH "${PROJECT_BINARY_DIR}")
 list(APPEND CMAKE_MODULE_PATH
-	"${PROJECT_SOURCE_DIR}/tools/SKSE-CMakeModules/Modules"
+	"${PROJECT_SOURCE_DIR}/Tools/SKSE-CMakeModules/Modules"
 )
 list(APPEND CMAKE_MODULE_PATH
-	"${PROJECT_SOURCE_DIR}/tools/Bethesda-CMakeModules/Modules"
+	"${PROJECT_SOURCE_DIR}/Tools/Bethesda-CMakeModules/Modules"
 )
 include(SKSEPlugin)
 set(SKSE_USE_XBYAK ON)
+set(SKSE_SUPPORT_VR ON)
+set(SKSE_COMMONLIBSSE_PATH "external/CommonLibVR")
 add_compile_definitions(SKSE_SUPPORT_XBYAK)
 
-if(OUTDATED)
-	add_compile_definitions(SKYRIM_OUTDATED)
-else()
-	add_compile_definitions(SKYRIM_AE)
-	add_compile_definitions(SKYRIM_SUPPORT_AE)
-endif()
 
 SKSEPlugin_Add(
 	${PROJECT_NAME}
@@ -46,8 +50,8 @@ SKSEPlugin_Add(
 		src/common/PCH.h
 )
 
-set_target_properties(CommonLibSSE PROPERTIES
-	FOLDER External
+set_target_properties(CommonLibVR PROPERTIES
+	FOLDER external
 )
 
 set(DATA_DIR "${PROJECT_SOURCE_DIR}/data")
@@ -66,33 +70,12 @@ if(DEFINED ENV{SKYRIM_MODS_FOLDER} AND IS_DIRECTORY "$ENV{SKYRIM_MODS_FOLDER}")
 endif()
 
 # ---- Compile Papyrus Scripts and Pack Into Archive ----
-include(Papyrus)
-include(BSArchive)
-
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Data/Source/Scripts")
-	file(GLOB ${PROJECT_NAME}_SOURCES
-		LIST_DIRECTORIES false
-		CONFIGURE_DEPENDS
-		"Data/Source/Scripts/*.psc"
-	)
-
-	Papyrus_Add(
-		"Papyrus"
-		GAME ${Skyrim64Path}
-		IMPORTS ${CMAKE_CURRENT_SOURCE_DIR}/Data/Source/Scripts
-		SOURCES ${${PROJECT_NAME}_SOURCES}
-		OPTIMIZE ANONYMIZE
-	)
-
-	BSArchive_Add(
-		"BSA"
-		OUTPUT "${PROJECT_NAME}.bsa"
-		FORMAT SSE
-		FILES ${Papyrus_OUTPUT}
-	)
-else()
-	message(STATUS "No scripts to compile found, won't compress into BSA.")
-endif()
+# NOTE: Papyrus compilation disabled for VR development builds
+# The .psc script is platform-agnostic - compile manually with Creation Kit when needed
+# TODO: For releases, either:
+#   1. Compile the script manually and include the .pex
+#   2. Point GAME path to Skyrim SE installation for automated compilation
+message(STATUS "Papyrus compilation skipped - compile Data/Source/Scripts/SEA_BarterFunctions.psc manually if needed")
 
 # ---- Automatically copy artifacts to MO2 ----
 if(DEFINED OUTPUT_FOLDER)

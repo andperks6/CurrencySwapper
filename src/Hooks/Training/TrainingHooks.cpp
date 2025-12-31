@@ -104,7 +104,7 @@ namespace Hooks::Training
 
 	inline bool SetupTrainingMenuHook::Install() {
 		logger::info("  >Installing the Setup Training Menu hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52666), 0x17E };
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51792), 0x17E };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
@@ -116,7 +116,7 @@ namespace Hooks::Training
 
 	inline bool GetPlayerGoldHook::Install() {
 		logger::info("  >Installing the Get Player Gold (Training) hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52667), 0x96 };
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51793), 0x96 };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
@@ -128,7 +128,8 @@ namespace Hooks::Training
 
 	inline bool CalculateTrainingCostHook::Install() {
 		logger::info("  >Installing the Calculate Training hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52667), 0x87 };
+		// TODO VR: Verify this offset for VR - this is a NEW hook in 2.0
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51793), 0x87 };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
@@ -138,7 +139,8 @@ namespace Hooks::Training
 
 		// Also install the text update hook
 		logger::info("  >Installing the Calculate Training Cost Text Update hook..."sv);
-		REL::Relocation<std::uintptr_t> textUpdateTarget{ REL::ID(52668), 0x291 };
+		// TODO VR: Verify this offset for VR - this is a NEW hook in 2.0
+		REL::Relocation<std::uintptr_t> textUpdateTarget{ REL::ID(51794), 0x291 };
 		if (!REL::make_pattern<"E8">().match(textUpdateTarget.address())) {
 			logger::critical("    >Failed to validate the hook pattern for text update."sv);
 			return false;
@@ -149,7 +151,7 @@ namespace Hooks::Training
 
 	inline bool RemovePlayerGoldHook::Install() {
 		logger::info("  >Installing the Remove Player Gold hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52667), 0xC3 };
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51793), 0xC3 };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
@@ -161,7 +163,8 @@ namespace Hooks::Training
 
 	inline bool SendNotEnoughGoldMessageHook::Install() {
 		logger::info("  >Installing the Send Not Enough Gold Message hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52667), 0x1BB };
+		// TODO VR: Verify this offset for VR - this is a NEW hook in 2.0
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51793), 0x1BB };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
@@ -173,7 +176,7 @@ namespace Hooks::Training
 
 	inline bool UpdateTrainingCurrencyHook::Install() {
 		logger::info("  >Installing the Update Training Currency hook..."sv);
-		REL::Relocation<std::uintptr_t> target{ REL::ID(52668), 0x31B };
+		REL::Relocation<std::uintptr_t> target{ REL::ID(51794), 0x31B };
 		if (!REL::make_pattern<"E8">().match(target.address())) {
 			logger::critical("    >Failed to validate the hook pattern."sv);
 			return false;
